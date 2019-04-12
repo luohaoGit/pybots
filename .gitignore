@@ -1,0 +1,9 @@
+*.iml
+*.log
+target
+.idea
+**/*.dump
+**/email.ini
+**/*.log
+**/timestamp*
+**/pre_status*
