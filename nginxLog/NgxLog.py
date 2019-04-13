@@ -1,11 +1,24 @@
 # -*- coding: UTF-8 -*-
 import os
-
+import re
+from datetime import datetime
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
 
+pattern = '''(?P<remote_addr>[\d\.]{7,}) - - (?:\[(?P<datetime>[^\[\]]+)\]) "(?P<request>[^"]+)" (?P<status>\d+) (?P<size>\d+) "(?P<user_agent>[^"]+)" "(?:[^"]+)"'''
 log_path = '/var/log/nginx/access.log'
 file = None
+
+
+'''
+183.206.18.237 - - [13/Apr/2019:12:49:16 -0400] "GET /tm.jpg HTTP/1.1" 304 0 "https://mail.qq.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36" "-"
+'''
+
+
+def extract(line):
+    regex = re.compile(pattern)
+    matcher = regex.match(line)
+    return matcher.groupdict()
 
 
 class ProcessTransientFile(ProcessEvent):
@@ -14,7 +27,8 @@ class ProcessTransientFile(ProcessEvent):
         global file
         line = file.readline()
         if line:
-            print(line)
+            for k, v in extract(line).items():
+                print(k, v)
 
 
 def monitor(file_name='.'):
