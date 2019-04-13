@@ -1,38 +1,34 @@
 # -*- coding: UTF-8 -*-
 import os
 
-from pyinotify import WatchManager, Notifier,ProcessEvent,IN_DELETE, IN_CREATE,IN_MODIFY
+from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
 
-log_path = 'test.log'
+log_path = '/var/log/nginx/access.log'
+file = None
 
 
-class EventHandler(ProcessEvent):
-    def process_IN_CREATE(self, event):
-        print("Create file: %s " % os.path.join(event.path, event.name))
-
-    def process_IN_DELETE(self, event):
-        print("Delete file: %s " % os.path.join(event.path, event.name))
-
+class ProcessTransientFile(ProcessEvent):
     def process_IN_MODIFY(self, event):
         print("Modify file: %s " % os.path.join(event.path, event.name))
+        global file
+        line = file.readline()
+        if line:
+            print(line)
 
 
-def monitor(path='.'):
+def monitor(file_name='.'):
+    global file
+    file = open(file_name, 'r')
+    st_results = os.stat(file_name)
+    st_size = st_results[6]
+    file.seek(st_size)
     wm = WatchManager()
-    mask = IN_DELETE | IN_CREATE | IN_MODIFY
-    notifier = Notifier(wm, EventHandler())
-    wm.add_watch(path, mask, auto_add=True, rec=True)
-    print('now starting monitor %s' % path)
-    while True:
-        try:
-            notifier.process_events()
-            if notifier.check_events():
-                notifier.read_events()
-        except KeyboardInterrupt:
-            notifier.stop()
-            break
+    notifier = Notifier(wm)
+    wm.watch_transient_file(file_name, IN_MODIFY, ProcessTransientFile)
+    print('now starting monitor %s' % file_name)
+    notifier.loop()
 
 
 if __name__ == "__main__":
-    monitor('/var/log/nginx/access.log')
+    monitor(log_path)
