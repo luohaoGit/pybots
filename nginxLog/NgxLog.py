@@ -15,7 +15,7 @@ file = None
 '''
 
 ops = {
-    'datetime': lambda timestr: datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S %z"),
+    'datetime': lambda timestr: datetime.strptime(timestr, "%d-%b-%Y:%H:%M:%S %z"),
     'status': int,
     'size': int
 }
