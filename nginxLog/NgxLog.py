@@ -3,7 +3,9 @@ import os
 import re
 import pytz
 import json
+import traceback
 from datetime import datetime
+from utils.EmailUtil import send_email
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
 
@@ -13,6 +15,7 @@ file = None
 tz = pytz.timezone('Asia/Shanghai')
 pic_name = 'px1.gif'
 access_log = 'access.log'
+email_subject = 'nginx ' + pic_name
 
 
 '''
@@ -20,7 +23,7 @@ access_log = 'access.log'
 '''
 
 ops = {
-    'datetime': lambda timestr: datetime.strptime(timestr, "%d/%b/%Y:%H:%M:%S %z").astimezone(tz),
+    'datetime': lambda timestr: datetime.strptime(timestr, "%d/%b/%Y:%H:%M:%S %z").astimezone(tz).strftime('%Y-%m-%d:%H:%M:%S'),
     'status': int,
     'size': int
 }
@@ -42,10 +45,15 @@ class ProcessTransientFile(ProcessEvent):
         line = file.readline()
         if line:
             print(line)
-            info = extract(line)
-            json_str = json.dumps(info)
-            with open(access_log, 'a') as f:
-                f.write(json_str + '\n')
+            try:
+                info = extract(line)
+                json_str = json.dumps(info)
+                send_email(email_subject, json_str)
+                with open(access_log, 'a') as f:
+                    f.write(json_str + '\n')
+            except Exception as e:
+                err = traceback.format_exc()
+                send_email(email_subject, err)
 
 
 def monitor(file_name='.'):
