@@ -2,6 +2,7 @@
 import os
 import re
 import pytz
+import json
 from datetime import datetime
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
@@ -10,6 +11,8 @@ pattern = '''(?P<remote_addr>[\d\.]{7,}) - - (?:\[(?P<datetime>[^\[\]]+)\]) "(?P
 log_path = '/var/log/nginx/access.log'
 file = None
 tz = pytz.timezone('Asia/Shanghai')
+pic_name = 'px1.gif'
+access_log = 'access.log'
 
 
 '''
@@ -38,8 +41,11 @@ class ProcessTransientFile(ProcessEvent):
         global file
         line = file.readline()
         if line:
-            for k, v in extract(line).items():
-                print(k, v)
+            print(line)
+            info = extract(line)
+            json_str = json.dumps(info)
+            with open(access_log, 'a') as f:
+                f.write(json_str + '\n')
 
 
 def monitor(file_name='.'):
