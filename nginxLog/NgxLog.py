@@ -8,8 +8,7 @@ from datetime import datetime
 from ..utils.EmailUtil import send_email
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
-lib_path = os.path.abspath(os.path.join('..'))
-sys.path.append(lib_path)
+sys.path.append(os.path.abspath(os.path.join('.')))
 
 pattern = '''(?P<remote_addr>[\d\.]{7,}) - - (?:\[(?P<datetime>[^\[\]]+)\]) "(?P<request>[^"]+)" (?P<status>\d+) (?P<size>\d+) "(?P<http_referer>[^"]+)" "(?P<user_agent>[^"]+)" "(?:[^"]+)"'''
 log_path = '/var/log/nginx/access.log'
