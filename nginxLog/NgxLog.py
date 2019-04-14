@@ -5,7 +5,7 @@ import pytz
 import json
 import traceback
 from datetime import datetime
-from utils.EmailUtil import send_email
+from ..utils.EmailUtil import send_email
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
 
