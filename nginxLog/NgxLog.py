@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
 import re
+import pytz
 from datetime import datetime
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
@@ -8,6 +9,7 @@ from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 pattern = '''(?P<remote_addr>[\d\.]{7,}) - - (?:\[(?P<datetime>[^\[\]]+)\]) "(?P<request>[^"]+)" (?P<status>\d+) (?P<size>\d+) "(?P<http_referer>[^"]+)" "(?P<user_agent>[^"]+)" "(?:[^"]+)"'''
 log_path = '/var/log/nginx/access.log'
 file = None
+tz = pytz.timezone('Asia/Shanghai')
 
 
 '''
@@ -15,7 +17,7 @@ file = None
 '''
 
 ops = {
-    'datetime': lambda timestr: datetime.strptime(timestr, "%d/%b/%Y:%H:%M:%S %z"),
+    'datetime': lambda timestr: datetime.strptime(timestr, "%d/%b/%Y:%H:%M:%S %z").astimezone(tz),
     'status': int,
     'size': int
 }
