@@ -48,7 +48,7 @@ class ProcessTransientFile(ProcessEvent):
             try:
                 info = extract(line)
                 json_str = json.dumps(info)
-                send_email(email_subject, json_str)
+                send_email(email_subject, json.dumps(info, indent=4))
                 with open(access_log, 'a') as f:
                     f.write(json_str + '\n')
             except Exception as e:
