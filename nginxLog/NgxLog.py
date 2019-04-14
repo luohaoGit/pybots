@@ -5,10 +5,10 @@ import pytz
 import json
 import traceback
 from datetime import datetime
-from ..utils.EmailUtil import send_email
+from utils.EmailUtil import send_email
 from pyinotify import WatchManager, Notifier, ProcessEvent, IN_MODIFY
 
-sys.path.insert(0, '..')
+sys.path.append(os.path.split(os.path.realpath(__file__))[0])
 
 pattern = '''(?P<remote_addr>[\d\.]{7,}) - - (?:\[(?P<datetime>[^\[\]]+)\]) "(?P<request>[^"]+)" (?P<status>\d+) (?P<size>\d+) "(?P<http_referer>[^"]+)" "(?P<user_agent>[^"]+)" "(?:[^"]+)"'''
 log_path = '/var/log/nginx/access.log'
