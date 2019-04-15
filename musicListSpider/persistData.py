@@ -10,7 +10,7 @@ from datetime import datetime
 import pymysql
 
 data_path = 'D:\music163'
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='', database='music163', charset='utf8')
+conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='', database='lss', charset='utf8')
 main_sql = 'INSERT INTO music_163_total (id, total, time) VALUES (%s, %s, %s);'
 detail_sql = 'INSERT INTO music_163_detail (pid, song_index, song_id, song_name, song_singer, time) VALUES (%s, %s, %s, %s, %s, %s);'
 
@@ -39,4 +39,5 @@ if __name__ == '__main__':
                 except Exception as e:
                     print(traceback.format_exc())
                     conn.rollback()
-    conn.close()
+                finally:
+                    conn.close()

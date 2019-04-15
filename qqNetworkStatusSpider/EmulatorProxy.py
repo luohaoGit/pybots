@@ -10,7 +10,7 @@ from threading import Timer
 import pytz
 from appium import webdriver
 
-from utils.EmailUtil import send_email
+from ..utils.EmailUtil import send_email
 
 qq = sys.argv[1]
 desired_caps = {
@@ -27,7 +27,7 @@ driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
 driver.implicitly_wait(20)
 driver.find_element_by_id('com.tencent.mobileqq:id/et_search_keyword').send_keys(qq)
 tz = pytz.timezone('Asia/Shanghai')
-log_path = './network_status_' + qq + '.log'
+log_path = './network_status_' + qq + '_' + datetime.fromtimestamp(int(time.time()), tz).strftime('%Y-%m-%d_%H_%M_%S') + '.log'
 pre_status_file = './pre_status_' + qq
 email_subject = 'tencent qq'
 exception_times = 0

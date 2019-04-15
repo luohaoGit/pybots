@@ -6,10 +6,11 @@ import os
 import sys
 import time
 import traceback
+import platform
 from datetime import datetime
 from threading import Timer
 from urllib.parse import parse_qs
-from utils.EmailUtil import send_email
+from ..utils.EmailUtil import send_email
 
 import pytz
 from bs4 import BeautifulSoup
@@ -18,7 +19,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 uid = sys.argv[1]
-driver_path = 'chromedriver'
+source_file_path = os.path.split(os.path.realpath(__file__))[0]
+driver_path = source_file_path + '/chromedriver'
+if platform.system() == 'Windows':
+    driver_path += '.exe'
 source_url = 'https://music.163.com/user/songs/rank?id=' + uid
 chrome_options = Options()
 chrome_options.add_argument('--headless')
