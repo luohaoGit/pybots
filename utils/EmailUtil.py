@@ -2,18 +2,16 @@
 # -*- coding: UTF-8 -*-
 
 import smtplib
+from configparser import ConfigParser
 from email.mime.text import MIMEText
 from email.utils import formataddr
-from configparser import ConfigParser
-import os
 
 __all__ = [
     'send_email',
     ]
 
 cfg = ConfigParser()
-source_file_path = os.path.split(os.path.realpath(__file__))[0]
-cfg.read(source_file_path + '/email.ini')
+cfg.read('email.ini')
 sender = cfg.get('account', 'from')
 user = cfg.get('account', 'to')
 passwd = cfg.get('account', 'pwd')
