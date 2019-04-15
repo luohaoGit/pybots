@@ -62,7 +62,7 @@ def get_song(inc, pre_count, pre_song_list):
             new_songs.append(s)
         else:
             pre_index = pre_song_list.index(s)
-            s_index = song_list.index(s)
+            s_index = song_list.index(s) + 1
             if s_index < pre_index:
                 up_songs.append(s)
 
