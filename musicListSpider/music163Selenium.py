@@ -70,17 +70,19 @@ def get_song(inc, pre_count, pre_song_list):
             if s_index < pre_index:
                 up_songs.append(s)
 
-    if has_never_heard or len(new_songs) > 0 or len(up_songs) > 0 or error:
+    if has_never_heard or len(new_songs) > 0 or len(up_songs) > 0:
         dump_file(Dump(now_str, count, song_list), dump_file_name_tpl.format(timestamp=now_str))
         with open(timestamp_file_name, 'w') as file:
             file.write(now_str)
-        content = '''time: {time}\ntotal: {total}\ndelta: {delta} \nnew:{new}\nup:{up}\nerror:{error}'''\
+        content = '''time: {time}\ntotal: {total}\ndelta: {delta} \nnew:{new}\nup:{up}'''\
             .format(time=now_str, total=count,
                     delta=count - pre_count,
                     new="\n".join(list(map(Song.__repr__, new_songs))),
-                    up="\n".join(list(map(Song.__repr__, up_songs))),
-                    error=error)
+                    up="\n".join(list(map(Song.__repr__, up_songs))),)
         send_email(email_subject, content)
+
+    if error:
+        send_email(email_subject, error)
 
     if not len(song_list):
         song_list = pre_song_list
