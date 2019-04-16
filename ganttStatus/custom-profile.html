@@ -33,31 +33,247 @@ var types = [
     {name: 'GPU', color: '#72b362'}
 ];
 
-// Generate mock data
-echarts.util.each(categories, function (category, index) {
-    var baseTime = startTime;
-    for (var i = 0; i < dataCount; i++) {
-        var typeItem = types[Math.round(Math.random() * (types.length - 1))];
-        var duration = Math.round(Math.random() * 10000);
-        data.push({
-            name: typeItem.name,
-            value: [
-                index,
-                baseTime,
-                baseTime += duration,
-                duration
-            ],
-            itemStyle: {
-                normal: {
-                    color: typeItem.color
-                }
-            }
-        });
-        baseTime += Math.round(Math.random() * 2000);
+data = [{
+    "name": "Nodes",
+    "value": [0, 1555410936233, 1555410943616, 7383],
+    "itemStyle": {
+        "normal": {
+            "color": "#75d874"
+        }
     }
-});
-
-console.log(JSON.stringify(data))
+}, {
+    "name": "GPU Memory",
+    "value": [0, 1555410944723, 1555410952109, 7386],
+    "itemStyle": {
+        "normal": {
+            "color": "#dc77dc"
+        }
+    }
+}, {
+    "name": "GPU Memory",
+    "value": [0, 1555410953786, 1555410958178, 4392],
+    "itemStyle": {
+        "normal": {
+            "color": "#dc77dc"
+        }
+    }
+}, {
+    "name": "Nodes",
+    "value": [0, 1555410958376, 1555410967450, 9074],
+    "itemStyle": {
+        "normal": {
+            "color": "#75d874"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [0, 1555410968528, 1555410971344, 2816],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [0, 1555410972265, 1555410981777, 9512],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [0, 1555410983114, 1555410989849, 6735],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [0, 1555410991194, 1555410993405, 2211],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [0, 1555410993535, 1555410995032, 1497],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [0, 1555410996883, 1555411001400, 4517],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [1, 1555410936233, 1555410937687, 1454],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "JS Heap",
+    "value": [1, 1555410939625, 1555410947857, 8232],
+    "itemStyle": {
+        "normal": {
+            "color": "#7b9ce1"
+        }
+    }
+}, {
+    "name": "GPU Memory",
+    "value": [1, 1555410948574, 1555410958123, 9549],
+    "itemStyle": {
+        "normal": {
+            "color": "#dc77dc"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [1, 1555410958571, 1555410961569, 2998],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "JS Heap",
+    "value": [1, 1555410962609, 1555410964105, 1496],
+    "itemStyle": {
+        "normal": {
+            "color": "#7b9ce1"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [1, 1555410965004, 1555410966295, 1291],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [1, 1555410966348, 1555410974629, 8281],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [1, 1555410975551, 1555410975700, 149],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [1, 1555410977100, 1555410981991, 4891],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [1, 1555410982517, 1555410984929, 2412],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "GPU",
+    "value": [2, 1555410936233, 1555410945216, 8983],
+    "itemStyle": {
+        "normal": {
+            "color": "#72b362"
+        }
+    }
+}, {
+    "name": "JS Heap",
+    "value": [2, 1555410945843, 1555410954638, 8795],
+    "itemStyle": {
+        "normal": {
+            "color": "#7b9ce1"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [2, 1555410954761, 1555410955676, 915],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "GPU",
+    "value": [2, 1555410956999, 1555410960181, 3182],
+    "itemStyle": {
+        "normal": {
+            "color": "#72b362"
+        }
+    }
+}, {
+    "name": "GPU",
+    "value": [2, 1555410960407, 1555410970321, 9914],
+    "itemStyle": {
+        "normal": {
+            "color": "#72b362"
+        }
+    }
+}, {
+    "name": "GPU",
+    "value": [2, 1555410970581, 1555410973009, 2428],
+    "itemStyle": {
+        "normal": {
+            "color": "#72b362"
+        }
+    }
+}, {
+    "name": "Nodes",
+    "value": [2, 1555410974048, 1555410976865, 2817],
+    "itemStyle": {
+        "normal": {
+            "color": "#75d874"
+        }
+    }
+}, {
+    "name": "Documents",
+    "value": [2, 1555410977955, 1555410982799, 4844],
+    "itemStyle": {
+        "normal": {
+            "color": "#bd6d6c"
+        }
+    }
+}, {
+    "name": "GPU",
+    "value": [2, 1555410983767, 1555410989569, 5802],
+    "itemStyle": {
+        "normal": {
+            "color": "#72b362"
+        }
+    }
+}, {
+    "name": "Listeners",
+    "value": [2, 1555410990296, 1555410990747, 451],
+    "itemStyle": {
+        "normal": {
+            "color": "#e0bc78"
+        }
+    }
+}]
 
 function renderItem(params, api) {
     var categoryIndex = api.value(0);
