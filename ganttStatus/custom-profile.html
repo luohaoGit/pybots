@@ -15,134 +15,173 @@
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
        <script type="text/javascript">
-           // 初始化echart
-           var chart = echarts.init(document.getElementById('container'));
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
 
-           // 各状态的颜色
-           var colors = ['#2f4554', '#61a0a8', '#d48265', '#c23531', '#1715c2', '#aec237', '#365880'];
+var data = [];
+var dataCount = 10;
+var startTime = 1555410936233;
+var categories = ["手机在线 - WiFi", "手机在线 - 2G", "手机在线 - 3G", "手机在线 - 4G", "在线", "离开", "offline"];
+var color = ["#d82dd4", "#42dc4a", "#dc77dc", "#365880", "#bd6d6c", "#e0bc78", "#e0474d"];
 
-           // 状态
-           var state = ["手机在线 - WiFi", "手机在线 - 2G", "手机在线 - 3G", "手机在线 - 4G", "在线", "离开", "offline"];
+data = [{
+    "name": categories[0],
+    "value": [0, 1555261016000, 1555261450000],
+    "itemStyle": {
+        "normal": {
+            "color": color[0]
+        }
+    }
+}, {
+    "name": categories[3],
+    "value": [3, 1555261450000, 1555262439000],
+    "itemStyle": {
+        "normal": {
+            "color": color[3]
+        }
+    }
+}, {
+    "name": categories[4],
+    "value": [4, 1555262439000, 1555262626000],
+    "itemStyle": {
+        "normal": {
+            "color": color[4]
+        }
+    }
+}, {
+    "name": categories[5],
+    "value": [5, 1555262626000, 1555263615000],
+    "itemStyle": {
+        "normal": {
+            "color": color[5]
+        }
+    }
+}, {
+    "name": categories[6],
+    "value": [6, 1555263615000, 1555263926000],
+    "itemStyle": {
+        "normal": {
+            "color": color[6]
+        }
+    }
+}, {
+    "name": categories[1],
+    "value": [1, 1555263926000, 1555281966000],
+    "itemStyle": {
+        "normal": {
+            "color": color[1]
+        }
+    }
+}, {
+    "name": categories[2],
+    "value": [2, 1555281966000, 1555282152000],
+    "itemStyle": {
+        "normal": {
+            "color": color[2]
+        }
+    }
+}, {
+    "name": categories[3],
+    "value": [3, 1555282152000, 1555288152000],
+    "itemStyle": {
+        "normal": {
+            "color": color[3]
+        }
+    }
+}]
 
-           // echart配置
-           var opt = {
-               color: colors,
-               tooltip: {
-                   formatter: function (params) {
-                       return params.name + ':' + params.value[1] + '~' + params.value[2];
-                   }
-               },
-               legend: {
-                   data: state,
-                   bottom: '1%',
-                   selectedMode: false, // 图例设为不可点击
-                   textStyle: {
-                       color: '#000'
-                   }
-               },
-               grid: {
-                   left: '3%',
-                   right: '3%',
-                   top: '1%',
-                   bottom: '10%',
-                   containLabel: true
-               },
-               xAxis: {
-                   min: 0 // x轴零刻度对应的实际值
-               },
-               yAxis: {
-                   data: ['WAN0', 'WAN1']
-               },
-               series: [
-                   // 用空bar来显示四个图例
-                   {name: state[0], type: 'bar', data: []},
-                   {name: state[1], type: 'bar', data: []},
-                   {name: state[2], type: 'bar', data: []},
-                   {name: state[3], type: 'bar', data: []},
-                   {
-                       type: 'custom',
-                       renderItem: function (params, api) {
-                           var categoryIndex = api.value(0);
-                           var start = api.coord([api.value(1), categoryIndex]);
-                           var end = api.coord([api.value(2), categoryIndex]);
-                           var height = 24;
+function renderItem(params, api) {
+    var categoryIndex = api.value(0);
+    var start = api.coord([api.value(1), categoryIndex]);
+    var end = api.coord([api.value(2), categoryIndex]);
+    var height = api.size([0, 1])[1] * 0.6;
 
-                           return {
-                               type: 'rect',
-                               shape: echarts.graphic.clipRectByRect({
-                                   x: start[0],
-                                   y: start[1] - height / 2,
-                                   width: end[0] - start[0],
-                                   height: height
-                               }, {
-                                   x: params.coordSys.x,
-                                   y: params.coordSys.y,
-                                   width: params.coordSys.width,
-                                   height: params.coordSys.height
-                               }),
-                               style: api.style()
-                           };
-                       },
-                       encode: {
-                           x: [1, 2],
-                           y: 0
-                       },
-                       data: [
-                           {
-                               itemStyle: { normal: { color: colors[0] } },
-                               name: state[0],
-                               value: [0, 0, 10]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[1] } },
-                               name: state[1],
-                               value: [0, 10, 25]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[2] } },
-                               name: state[2],
-                               value: [0, 25, 45]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[3] } },
-                               name: state[3],
-                               value: [0, 45, 60]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[0] } },
-                               name: state[0],
-                               value: [1, 0, 15]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[1] } },
-                               name: state[1],
-                               value: [1, 15, 20]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[2] } },
-                               name: state[2],
-                               value: [1, 20, 35]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[3] } },
-                               name: state[3],
-                               value: [1, 35, 40]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[0] } },
-                               name: state[0],
-                               value: [1, 40, 45]
-                           },
-                           {
-                               itemStyle: { normal: { color: colors[3] } },
-                               name: state[3],
-                               value: [1, 45, 60]
-                           }
-                       ]
-                   }
-               ]
-           };
-           chart.setOption(opt, true);
+    var rectShape = echarts.graphic.clipRectByRect({
+        x: start[0],
+        y: start[1] - height / 2,
+        width: end[0] - start[0],
+        height: height
+    }, {
+        x: params.coordSys.x,
+        y: params.coordSys.y,
+        width: params.coordSys.width,
+        height: params.coordSys.height
+    });
+
+    return rectShape && {
+        type: 'rect',
+        shape: rectShape,
+        style: api.style()
+    };
+}
+
+
+option = {
+    tooltip: {
+        formatter: function (params) {
+            return params.marker + params.name + ': ' + params.value[2] + ' ms';
+        }
+    },
+    title: {
+        text: 'QQ STATUS',
+        left: 'center'
+    },
+    dataZoom: [{
+        type: 'slider',
+        filterMode: 'weakFilter',
+        showDataShadow: false,
+        top: 400,
+        height: 10,
+        borderColor: 'transparent',
+        backgroundColor: '#e2e2e2',
+        handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
+        handleSize: 20,
+        handleStyle: {
+            shadowBlur: 6,
+            shadowOffsetX: 1,
+            shadowOffsetY: 2,
+            shadowColor: '#aaa'
+        },
+        labelFormatter: ''
+    }, {
+        type: 'inside',
+        filterMode: 'weakFilter'
+    }],
+    grid: {
+        height:300
+    },
+    xAxis: {
+        min: 0,
+        scale: true,
+        axisLabel: {
+            formatter: function (val) {
+                return Math.max(0, val) + ' ms';
+            }
+        }
+    },
+    yAxis: {
+        data: categories
+    },
+    series: [{
+        type: 'custom',
+        renderItem: renderItem,
+        itemStyle: {
+            normal: {
+                opacity: 0.8
+            }
+        },
+        encode: {
+            x: [1, 2],
+            y: 0
+        },
+        data: data
+    }]
+};;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
        </script>
    </body>
 </html>
