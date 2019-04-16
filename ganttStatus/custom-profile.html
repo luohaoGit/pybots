@@ -15,356 +15,134 @@
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
        <script type="text/javascript">
-var dom = document.getElementById("container");
-var myChart = echarts.init(dom);
-var app = {};
-option = null;
+           // 初始化echart
+           var chart = echarts.init(document.getElementById('container'));
 
-var data = [];
-var dataCount = 10;
-var startTime = +new Date();
-var categories = ['categoryA', 'categoryB', 'categoryC'];
-var types = [
-    {name: 'JS Heap', color: '#7b9ce1'},
-    {name: 'Documents', color: '#bd6d6c'},
-    {name: 'Nodes', color: '#75d874'},
-    {name: 'Listeners', color: '#e0bc78'},
-    {name: 'GPU Memory', color: '#dc77dc'},
-    {name: 'GPU', color: '#72b362'}
-];
+           // 各状态的颜色
+           var colors = ['#2f4554', '#61a0a8', '#d48265', '#c23531', '#1715c2', '#aec237', '#365880'];
 
-data = [{
-    "name": "Nodes",
-    "value": [0, 1555410936233, 1555410943616, 7383],
-    "itemStyle": {
-        "normal": {
-            "color": "#75d874"
-        }
-    }
-}, {
-    "name": "GPU Memory",
-    "value": [0, 1555410944723, 1555410952109, 7386],
-    "itemStyle": {
-        "normal": {
-            "color": "#dc77dc"
-        }
-    }
-}, {
-    "name": "GPU Memory",
-    "value": [0, 1555410953786, 1555410958178, 4392],
-    "itemStyle": {
-        "normal": {
-            "color": "#dc77dc"
-        }
-    }
-}, {
-    "name": "Nodes",
-    "value": [0, 1555410958376, 1555410967450, 9074],
-    "itemStyle": {
-        "normal": {
-            "color": "#75d874"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [0, 1555410968528, 1555410971344, 2816],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [0, 1555410972265, 1555410981777, 9512],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [0, 1555410983114, 1555410989849, 6735],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [0, 1555410991194, 1555410993405, 2211],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [0, 1555410993535, 1555410995032, 1497],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [0, 1555410996883, 1555411001400, 4517],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [1, 1555410936233, 1555410937687, 1454],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "JS Heap",
-    "value": [1, 1555410939625, 1555410947857, 8232],
-    "itemStyle": {
-        "normal": {
-            "color": "#7b9ce1"
-        }
-    }
-}, {
-    "name": "GPU Memory",
-    "value": [1, 1555410948574, 1555410958123, 9549],
-    "itemStyle": {
-        "normal": {
-            "color": "#dc77dc"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [1, 1555410958571, 1555410961569, 2998],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "JS Heap",
-    "value": [1, 1555410962609, 1555410964105, 1496],
-    "itemStyle": {
-        "normal": {
-            "color": "#7b9ce1"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [1, 1555410965004, 1555410966295, 1291],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [1, 1555410966348, 1555410974629, 8281],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [1, 1555410975551, 1555410975700, 149],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [1, 1555410977100, 1555410981991, 4891],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [1, 1555410982517, 1555410984929, 2412],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "GPU",
-    "value": [2, 1555410936233, 1555410945216, 8983],
-    "itemStyle": {
-        "normal": {
-            "color": "#72b362"
-        }
-    }
-}, {
-    "name": "JS Heap",
-    "value": [2, 1555410945843, 1555410954638, 8795],
-    "itemStyle": {
-        "normal": {
-            "color": "#7b9ce1"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [2, 1555410954761, 1555410955676, 915],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "GPU",
-    "value": [2, 1555410956999, 1555410960181, 3182],
-    "itemStyle": {
-        "normal": {
-            "color": "#72b362"
-        }
-    }
-}, {
-    "name": "GPU",
-    "value": [2, 1555410960407, 1555410970321, 9914],
-    "itemStyle": {
-        "normal": {
-            "color": "#72b362"
-        }
-    }
-}, {
-    "name": "GPU",
-    "value": [2, 1555410970581, 1555410973009, 2428],
-    "itemStyle": {
-        "normal": {
-            "color": "#72b362"
-        }
-    }
-}, {
-    "name": "Nodes",
-    "value": [2, 1555410974048, 1555410976865, 2817],
-    "itemStyle": {
-        "normal": {
-            "color": "#75d874"
-        }
-    }
-}, {
-    "name": "Documents",
-    "value": [2, 1555410977955, 1555410982799, 4844],
-    "itemStyle": {
-        "normal": {
-            "color": "#bd6d6c"
-        }
-    }
-}, {
-    "name": "GPU",
-    "value": [2, 1555410983767, 1555410989569, 5802],
-    "itemStyle": {
-        "normal": {
-            "color": "#72b362"
-        }
-    }
-}, {
-    "name": "Listeners",
-    "value": [2, 1555410990296, 1555410990747, 451],
-    "itemStyle": {
-        "normal": {
-            "color": "#e0bc78"
-        }
-    }
-}]
+           // 状态
+           var state = ["手机在线 - WiFi", "手机在线 - 2G", "手机在线 - 3G", "手机在线 - 4G", "在线", "离开", "offline"];
 
-function renderItem(params, api) {
-    var categoryIndex = api.value(0);
-    var start = api.coord([api.value(1), categoryIndex]);
-    var end = api.coord([api.value(2), categoryIndex]);
-    var height = api.size([0, 1])[1] * 0.6;
+           // echart配置
+           var opt = {
+               color: colors,
+               tooltip: {
+                   formatter: function (params) {
+                       return params.name + ':' + params.value[1] + '~' + params.value[2];
+                   }
+               },
+               legend: {
+                   data: state,
+                   bottom: '1%',
+                   selectedMode: false, // 图例设为不可点击
+                   textStyle: {
+                       color: '#000'
+                   }
+               },
+               grid: {
+                   left: '3%',
+                   right: '3%',
+                   top: '1%',
+                   bottom: '10%',
+                   containLabel: true
+               },
+               xAxis: {
+                   min: 0 // x轴零刻度对应的实际值
+               },
+               yAxis: {
+                   data: ['WAN0', 'WAN1']
+               },
+               series: [
+                   // 用空bar来显示四个图例
+                   {name: state[0], type: 'bar', data: []},
+                   {name: state[1], type: 'bar', data: []},
+                   {name: state[2], type: 'bar', data: []},
+                   {name: state[3], type: 'bar', data: []},
+                   {
+                       type: 'custom',
+                       renderItem: function (params, api) {
+                           var categoryIndex = api.value(0);
+                           var start = api.coord([api.value(1), categoryIndex]);
+                           var end = api.coord([api.value(2), categoryIndex]);
+                           var height = 24;
 
-    var rectShape = echarts.graphic.clipRectByRect({
-        x: start[0],
-        y: start[1] - height / 2,
-        width: end[0] - start[0],
-        height: height
-    }, {
-        x: params.coordSys.x,
-        y: params.coordSys.y,
-        width: params.coordSys.width,
-        height: params.coordSys.height
-    });
-
-    return rectShape && {
-        type: 'rect',
-        shape: rectShape,
-        style: api.style()
-    };
-}
-
-
-option = {
-    tooltip: {
-        formatter: function (params) {
-            return params.marker + params.name + ': ' + params.value[3] + ' ms';
-        }
-    },
-    title: {
-        text: 'Profile',
-        left: 'center'
-    },
-    dataZoom: [{
-        type: 'slider',
-        filterMode: 'weakFilter',
-        showDataShadow: false,
-        top: 400,
-        height: 10,
-        borderColor: 'transparent',
-        backgroundColor: '#e2e2e2',
-        handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
-        handleSize: 20,
-        handleStyle: {
-            shadowBlur: 6,
-            shadowOffsetX: 1,
-            shadowOffsetY: 2,
-            shadowColor: '#aaa'
-        },
-        labelFormatter: ''
-    }, {
-        type: 'inside',
-        filterMode: 'weakFilter'
-    }],
-    grid: {
-        height:300
-    },
-    xAxis: {
-        min: startTime,
-        scale: true,
-        axisLabel: {
-            formatter: function (val) {
-                return Math.max(0, val - startTime) + ' ms';
-            }
-        }
-    },
-    yAxis: {
-        data: categories
-    },
-    series: [{
-        type: 'custom',
-        renderItem: renderItem,
-        itemStyle: {
-            normal: {
-                opacity: 0.8
-            }
-        },
-        encode: {
-            x: [1, 2],
-            y: 0
-        },
-        data: data
-    }]
-};;
-if (option && typeof option === "object") {
-    myChart.setOption(option, true);
-}
+                           return {
+                               type: 'rect',
+                               shape: echarts.graphic.clipRectByRect({
+                                   x: start[0],
+                                   y: start[1] - height / 2,
+                                   width: end[0] - start[0],
+                                   height: height
+                               }, {
+                                   x: params.coordSys.x,
+                                   y: params.coordSys.y,
+                                   width: params.coordSys.width,
+                                   height: params.coordSys.height
+                               }),
+                               style: api.style()
+                           };
+                       },
+                       encode: {
+                           x: [1, 2],
+                           y: 0
+                       },
+                       data: [
+                           {
+                               itemStyle: { normal: { color: colors[0] } },
+                               name: state[0],
+                               value: [0, 0, 10]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[1] } },
+                               name: state[1],
+                               value: [0, 10, 25]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[2] } },
+                               name: state[2],
+                               value: [0, 25, 45]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[3] } },
+                               name: state[3],
+                               value: [0, 45, 60]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[0] } },
+                               name: state[0],
+                               value: [1, 0, 15]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[1] } },
+                               name: state[1],
+                               value: [1, 15, 20]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[2] } },
+                               name: state[2],
+                               value: [1, 20, 35]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[3] } },
+                               name: state[3],
+                               value: [1, 35, 40]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[0] } },
+                               name: state[0],
+                               value: [1, 40, 45]
+                           },
+                           {
+                               itemStyle: { normal: { color: colors[3] } },
+                               name: state[3],
+                               value: [1, 45, 60]
+                           }
+                       ]
+                   }
+               ]
+           };
+           chart.setOption(opt, true);
        </script>
    </body>
 </html>
