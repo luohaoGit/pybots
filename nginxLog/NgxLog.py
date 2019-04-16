@@ -43,8 +43,8 @@ class ProcessTransientFile(ProcessEvent):
         print("Modify file: %s " % os.path.join(event.path, event.name))
         global file
         line = file.readline()
+        print(line)
         if line and line.find(pic_name) != -1:
-            print(line)
             try:
                 info = extract(line)
                 json_str = json.dumps(info)

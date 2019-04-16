@@ -3,7 +3,9 @@ import pytz
 from datetime import datetime
 
 if __name__ == '__main__':
-    line = '''183.206.18.237 - - [13/Apr/2019:12:49:16 -0400] "GET /tm.jpg HTTP/1.1" 304 0 "https://mail.qq.com/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36" "-"'''
+    line = '''49.74.84.35 - - [16/Apr/2019:11:27:26 +0800] "GET /px1.gif?t=1555385217781 HTTP/1.1" 200 826 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36" "-"'''
+    if line:
+        print(line.find('px1.gif'))
     pattern = '''(?P<remote_addr>[\d\.]{7,}) - - (?:\[(?P<datetime>[^\[\]]+)\]) "(?P<request>[^"]+)" (?P<status>\d+) (?P<size>\d+) "(?P<http_referer>[^"]+)" "(?P<user_agent>[^"]+)" "(?:[^"]+)"'''
     regex = re.compile(pattern)
     matcher = regex.match(line)
