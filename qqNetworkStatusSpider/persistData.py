@@ -8,13 +8,14 @@ from datetime import datetime
 
 import pymysql
 
-file_name = 'E:/python_workspace/network_status_3166756541_2019-04-16_09_06_34.log'
+file_name = 'network_status_3166756541_2019-04-17_12_55_20'
+path = 'E:/python_workspace/' + file_name + '.log'
 conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='', database='lss', charset='utf8')
 sql = 'INSERT INTO qq_status (id, status, time) VALUES (%s, %s, %s);'
 
 
 if __name__ == '__main__':
-    with open(file_name, 'r') as f:
+    with open(path, 'r') as f:
         persis_data = []
         pre_status = 'init'
         for line in f:

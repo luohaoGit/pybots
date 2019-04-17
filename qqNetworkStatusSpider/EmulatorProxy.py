@@ -6,9 +6,10 @@ import time
 import traceback
 from datetime import datetime
 from threading import Timer
-
+import pymysql
 import pytz
 from appium import webdriver
+from DBUtils.PooledDB import PooledDB
 
 from ..utils.EmailUtil import send_email
 
@@ -31,6 +32,8 @@ log_path = './network_status_' + qq + '_' + datetime.fromtimestamp(int(time.time
 pre_status_file = './pre_status_' + qq
 email_subject = 'tencent qq'
 exception_times = 0
+pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
+sql = 'INSERT INTO qq_status (id, status, time) VALUES (%s, %s, %s);'
 
 
 def parse_network_status(inc, pre_status):
@@ -43,7 +46,7 @@ def parse_network_status(inc, pre_status):
         if ns_eles:
             ns = ns_eles[0].text
         else:
-            ns = 'offline'
+            ns = '离线'
         driver.find_element_by_id('com.tencent.mobileqq:id/rlCommenTitle').find_elements_by_class_name('android.widget.LinearLayout')[0].click()
         now = datetime.fromtimestamp(int(time.time()), tz).strftime('%Y-%m-%d %H:%M:%S')
         content = qq + "\t" + now + "\t" + pre_status + " =======> " + ns
@@ -51,6 +54,7 @@ def parse_network_status(inc, pre_status):
         dump_log(Status(now, qq, ns))
         if pre_status != 'init' and pre_status != ns:
             send_email(email_subject, content)
+            insert_log(now, ns)
     except Exception as ex:
         exception_times += 1
         print(traceback.format_exc())
@@ -59,6 +63,23 @@ def parse_network_status(inc, pre_status):
 
     t = Timer(inc, parse_network_status, (inc, ns))
     t.start()
+
+
+def insert_log(now, ns):
+    cursor = None
+    try:
+        conn = pool.connection()
+        cursor = conn.cursor()
+        now_datetime = datetime.strptime(now, "%Y-%m-%d %H:%M:%S")
+        data_id = int(time.mktime(now_datetime.timetuple()))
+        cursor.execute(sql, [data_id, ns, now_datetime])
+        conn.commit()
+    except Exception as ex:
+        print(traceback.format_exc())
+        conn.rollback()
+    finally:
+        if cursor:
+            cursor.close()
 
 
 def dump_log(status):

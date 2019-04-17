@@ -3,13 +3,14 @@ import pymysql
 from urllib import parse
 import traceback
 import json
+from DBUtils.PooledDB import PooledDB
 
 host = ('localhost', 8888)
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='', database='lss', charset='utf8')
+pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
 sql_tpl = 'select id, status from qq_status where time > "%s" and time < "%s" order by id'
-cursor = conn.cursor()
 
-categories = ["手机在线 - WiFi", "手机在线 - 4G", "手机在线 - 3G", "手机在线 - 2G", "在线", "离开", "offline"]
+
+categories = ["手机在线 - WiFi", "手机在线 - 4G", "手机在线 - 3G", "手机在线 - 2G", "在线", "离开", "离线"]
 colors = {
     "手机在线 - WiFi": "#42dc4a",
     "手机在线 - 4G": "#d82dd4",
@@ -17,7 +18,7 @@ colors = {
     "手机在线 - 2G": "#365880",
     "在线": "#990000",
     "离开": "#9999FF",
-    "offline": "#e0474d"
+    "离线": "#e0474d"
 }
 
 
@@ -33,6 +34,8 @@ class Resquest(BaseHTTPRequestHandler):
                 e = params['e'][0] if params['s'] else ''
                 sql = sql_tpl % (s, e)
                 print(sql)
+                conn = pool.connection()
+                cursor = conn.cursor()
                 cursor.execute(sql)
                 results = cursor.fetchall()
                 data = []
@@ -44,7 +47,7 @@ class Resquest(BaseHTTPRequestHandler):
                     if i < length - 1:
                         next_timestamp = results[i + 1][0] * 1000
                     else:
-                        next_timestamp = timestamp + 100000
+                        next_timestamp = timestamp + 1000000
                     item = {
                         "name": status,
                         "value": [status, timestamp, next_timestamp],
