@@ -25,11 +25,10 @@ var data = [];
 
 $.get('qq-status.data?' + getUrlParam(), function (rawData) {
     data = rawData;
-    console.log(data)
     option = {
         tooltip: {
             formatter: function (params) {
-                return params.marker + params.name + ': ' + moment(params.value[1]).format('hh:mm') + " 持续 " + moment.duration(params.value[2] - params.value[1]).humanize();
+                return params.marker + params.name + ': ' + moment(params.value[1]).format('D号 A hh:mm') + " 持续 " + moment.duration(params.value[2] - params.value[1]).humanize();
             }
         },
         title: {

@@ -4,6 +4,7 @@ from urllib import parse
 import traceback
 import json
 from DBUtils.PooledDB import PooledDB
+import time
 
 host = ('localhost', 8888)
 pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
@@ -43,11 +44,10 @@ class Resquest(BaseHTTPRequestHandler):
                 for i, row in enumerate(results):
                     timestamp, status = row
                     timestamp = timestamp * 1000
-                    next_timestamp = timestamp + 1000
                     if i < length - 1:
                         next_timestamp = results[i + 1][0] * 1000
                     else:
-                        next_timestamp = timestamp + 1000000
+                        next_timestamp = int(time.time()) * 1000
                     item = {
                         "name": status,
                         "value": [status, timestamp, next_timestamp],
