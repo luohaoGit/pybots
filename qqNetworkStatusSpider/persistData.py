@@ -8,7 +8,7 @@ from datetime import datetime
 
 import pymysql
 
-file_name = 'E:/network_status.log'
+file_name = 'E:/python_workspace/network_status_3166756541_2019-04-16_09_06_34.log'
 conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='', database='lss', charset='utf8')
 sql = 'INSERT INTO qq_status (id, status, time) VALUES (%s, %s, %s);'
 
