@@ -3,6 +3,7 @@ import pymysql
 from urllib import parse
 import traceback
 import json
+import datetime
 from DBUtils.PooledDB import PooledDB
 import time
 
@@ -31,8 +32,10 @@ class Resquest(BaseHTTPRequestHandler):
         if 'qq-status.data' in file_name:
             try:
                 params = parse.parse_qs(res.query)
-                s = params['s'][0] if params['s'] else ''
-                e = params['e'][0] if params['s'] else ''
+                s = params['s'][0] if 's' in params else ''
+                e = params['e'][0] if 'e' in params else ''
+                if not e:
+                    e = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
                 sql = sql_tpl % (s, e)
                 print(sql)
                 conn = pool.connection()
