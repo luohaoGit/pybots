@@ -6,11 +6,12 @@ import json
 import datetime
 from DBUtils.PooledDB import PooledDB
 import time
+import os
 
 host = ('localhost', 8888)
 pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
 sql_tpl = 'select id, status from qq_status where time > "%s" and time < "%s" order by id'
-
+source_file_path = os.path.split(os.path.realpath(__file__))[0] + '/'
 
 categories = ["手机在线 - WiFi", "手机在线 - 4G", "手机在线 - 3G", "手机在线 - 2G", "在线", "离开", "离线"]
 colors = {
@@ -70,7 +71,7 @@ class Resquest(BaseHTTPRequestHandler):
                 self.send_error(500, 'Exception: %s' % traceback.format_exc())
         elif 'qq-status.html' in file_name:
             try:
-                with open(file_name, 'rb') as f:
+                with open(source_file_path + file_name, 'rb') as f:
                     content = f.read()
                     self.send_response(200)
                     self.send_header('Content-type', 'text/html')
