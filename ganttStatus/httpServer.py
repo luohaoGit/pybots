@@ -35,6 +35,8 @@ class Resquest(BaseHTTPRequestHandler):
                 params = parse.parse_qs(res.query)
                 s = params['s'][0] if 's' in params else ''
                 e = params['e'][0] if 'e' in params else ''
+                if not s:
+                    s = (datetime.datetime.now()).strftime('%Y-%m-%d')
                 if not e:
                     e = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
                 sql = sql_tpl % (s, e)
