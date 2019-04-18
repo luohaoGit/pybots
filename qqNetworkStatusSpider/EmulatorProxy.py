@@ -106,6 +106,6 @@ if __name__ == '__main__':
         else:
             with open(pre_status_file, 'r') as f:
                 init_status = f.read()
-        parse_network_status(60 * 1, init_status)
+        parse_network_status(60 * 0.5, init_status)
     except Exception as e:
         print(traceback.format_exc())

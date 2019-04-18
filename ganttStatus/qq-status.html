@@ -20,7 +20,9 @@ var dom = document.getElementById("container");
 var myChart = echarts.init(dom);
 option = null;
 moment.locale('zh-cn');
-
+moment.relativeTimeThreshold('s', 60);
+moment.relativeTimeThreshold('m', 60);
+moment.relativeTimeThreshold('h', 24);
 var data = [];
 
 $.get('qq-status.data?' + getUrlParam(), function (rawData) {
