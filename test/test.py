@@ -4,4 +4,7 @@ import datetime
 import time
 
 if __name__ == '__main__':
-    print((datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
+    a = slice(5, 10, 2)
+    s = 'HelloWorld'
+    for i in range(*a.indices(len(s))):
+        print(s[i])
