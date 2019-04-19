@@ -8,6 +8,8 @@ from DBUtils.PooledDB import PooledDB
 import time
 import os
 import re
+from operator import itemgetter
+from itertools import groupby
 
 host = ('localhost', 8888)
 pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
@@ -72,6 +74,7 @@ class Resquest(BaseHTTPRequestHandler):
                         results = fetch_all(music163_sql % (s, e))
                         pre_song_arr = []
                         pre_count = 0
+                        temp_data = []
                         for i, (rid, count, song_time) in enumerate(results):
                             songs = fetch_all(music163_detail_sql % rid)
                             songs_arr = []
@@ -92,9 +95,18 @@ class Resquest(BaseHTTPRequestHandler):
                             item = {
                                 'id': rid,
                                 'count': count,
+                                'date': song_time.strftime('%Y-%m-%d'),
+                                'time': song_time.strftime('%H:%M:%S'),
                                 'listen_songs': listen_songs
                             }
-                            data.append(item)
+                            temp_data.append(item)
+
+                        if temp_data:
+                            for date, items in groupby(temp_data, key=itemgetter('date')):
+                                data.append({
+                                    'value': date,
+                                    'items': [item for item in items]
+                                })
 
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
