@@ -55,6 +55,7 @@ def parse_network_status(inc, pre_status):
         if pre_status != 'init' and pre_status != ns:
             send_email(email_subject, content)
             insert_log(now, ns)
+        exception_times = 0
     except Exception as ex:
         exception_times += 1
         print(traceback.format_exc())
@@ -67,8 +68,8 @@ def parse_network_status(inc, pre_status):
 
 def insert_log(now, ns):
     cursor = None
+    conn = pool.connection()
     try:
-        conn = pool.connection()
         cursor = conn.cursor()
         now_datetime = datetime.strptime(now, "%Y-%m-%d %H:%M:%S")
         data_id = int(time.mktime(now_datetime.timetuple()))
@@ -91,9 +92,9 @@ def dump_log(status):
 
 
 class Status(object):
-    def __init__(self, time_str, qq, status):
+    def __init__(self, time_str, qq_no, status):
         self.time_str = time_str
-        self.qq = qq
+        self.qq = qq_no
         self.status = status
 
 
