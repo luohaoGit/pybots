@@ -7,6 +7,7 @@
        <div id="container" style="height: 100%"></div>
        <script type="text/javascript" src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
        <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+       <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
@@ -18,29 +19,94 @@
        <script type="text/javascript">
            var dom = document.getElementById("container");
            var myChart = echarts.init(dom);
-           var app = {};
            option = null;
            var cellSize = [80, 80];
-           var pieRadius = 30;
-
-           var range = '2017-02';
-           function getVirtulData() {
-               var date = +echarts.number.parseDate(range + '-01');
-               var end = +echarts.number.parseDate(range + '-28');
-               var dayTime = 3600 * 24 * 1000;
-               var data = [];
-               for (var time = date; time < end; time += dayTime) {
-                   data.push([
-                       echarts.format.formatTime('yyyy-MM-dd', time),
-                       Math.floor(Math.random() * 10000)
-                   ]);
-               }
-               return data;
+           var urlParam = getUrlParam();
+           var m = moment();
+           if(urlParam){
+               var month = urlParam.split('=')[1];
+               m = moment(month);
            }
+
+           var range = m.format('YYYY-MM');
+           var param = 's=' + m.date(1).format('YYYY-MM-DD') + '&e=' + m.add(1, 'months').date(1).format('YYYY-MM-DD');
+           var scatterData = [];
+           function getData() {
+               myChart.showLoading(
+                   {
+                       text: 'Loding...',
+                       color: '#c20b1c',
+                   }
+               );
+               $.get('music163.data?' + param, function (data) {
+                   scatterData = data;
+                   option = {
+                       tooltip : {
+
+                       },
+                       calendar: {
+                           top: 'middle',
+                           left: 'center',
+                           orient: 'vertical',
+                           cellSize: cellSize,
+                           yearLabel: {
+                               show: false,
+                               textStyle: {
+                                   fontSize: 30
+                               }
+                           },
+                           dayLabel: {
+                               margin: 20,
+                               firstDay: 1,
+                               nameMap: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+                           },
+                           monthLabel: {
+                               show: true
+                           },
+                           range: [range]
+                       },
+                       series: [{
+                           id: 'label',
+                           type: 'scatter',
+                           coordinateSystem: 'calendar',
+                           symbolSize: function(param){
+                               var base = param[1] * 5;
+                               return base < 45 ? base : 45;
+                           },
+                           label: {
+                               normal: {
+                                   show: true,
+                                   formatter: function (params) {
+                                       return echarts.format.formatTime('dd', params.value[0]);
+                                   },
+                                   offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
+                                   textStyle: {
+                                       color: '#000',
+                                       fontSize: 14
+                                   }
+                               }
+                           },
+                           data: scatterData
+                       }]
+                   };
+
+                   if (option && typeof option === "object") {
+                       myChart.setOption(option, true);
+                   }
+
+                   myChart.hideLoading();
+               });
+           }
+
+           getData();
 
            function getPieSeries(scatterData, chart) {
                return echarts.util.map(scatterData, function (item, index) {
                    var center = chart.convertToPixel('calendar', item);
+                   var count = item[1];
+                   var events = item[2];
+                   var pieRadius = count < 35 ? count : 35;
+
                    return {
                        id: index + 'pie',
                        type: 'pie',
@@ -53,94 +119,16 @@
                        },
                        radius: pieRadius,
                        data: [
-                           {name: '工作', value: Math.round(Math.random() * 24)},
-                           {name: '娱乐', value: Math.round(Math.random() * 24)},
-                           {name: '睡觉', value: Math.round(Math.random() * 24)}
+                           {'name': 'music163', 'value': count}
                        ]
                    };
                });
            }
 
-           function getPieSeriesUpdate(scatterData, chart) {
-               return echarts.util.map(scatterData, function (item, index) {
-                   var center = chart.convertToPixel('calendar', item);
-                   return {
-                       id: index + 'pie',
-                       center: center
-                   };
-               });
-           }
-
-           var scatterData = getVirtulData();
-
-           option = {
-               tooltip : {},
-               legend: {
-                   data: ['工作', '娱乐', '睡觉'],
-                   bottom: 20
-               },
-               calendar: {
-                   top: 'middle',
-                   left: 'center',
-                   orient: 'vertical',
-                   cellSize: cellSize,
-                   yearLabel: {
-                       show: false,
-                       textStyle: {
-                           fontSize: 30
-                       }
-                   },
-                   dayLabel: {
-                       margin: 20,
-                       firstDay: 1,
-                       nameMap: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-                   },
-                   monthLabel: {
-                       show: false
-                   },
-                   range: [range]
-               },
-               series: [{
-                   id: 'label',
-                   type: 'scatter',
-                   coordinateSystem: 'calendar',
-                   symbolSize: 1,
-                   label: {
-                       normal: {
-                           show: true,
-                           formatter: function (params) {
-                               return echarts.format.formatTime('dd', params.value[0]);
-                           },
-                           offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
-                           textStyle: {
-                               color: '#000',
-                               fontSize: 14
-                           }
-                       }
-                   },
-                   data: scatterData
-               }]
-           };
-
-           if (!app.inNode) {
-               var pieInitialized;
-               setTimeout(function () {
-                   pieInitialized = true;
-                   myChart.setOption({
-                       series: getPieSeries(scatterData, myChart)
-                   });
-               }, 10);
-
-               app.onresize = function () {
-                   if (pieInitialized) {
-                       myChart.setOption({
-                           series: getPieSeriesUpdate(scatterData, myChart)
-                       });
-                   }
-               };
-           };
-           if (option && typeof option === "object") {
-               myChart.setOption(option, true);
+           function getUrlParam(){
+               var url = document.location.toString();
+               var arrUrl = url.split("?");
+               return arrUrl[1] === undefined ? '' : arrUrl[1]
            }
        </script>
    </body>

@@ -12,7 +12,7 @@ from operator import itemgetter
 from itertools import groupby
 
 host = ('localhost', 8888)
-pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
+pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='root', db='lss', port=3306)
 source_file_path = os.path.split(os.path.realpath(__file__))[0] + '/'
 data_pat = re.compile(r'^/(?P<file_name>(?P<name>.*?)\.(?P<suffix>.*))$')
 qq_sql_tpl = 'select id, status from qq_status where time > "%s" and time < "%s" order by id'
@@ -103,10 +103,8 @@ class Resquest(BaseHTTPRequestHandler):
 
                         if temp_data:
                             for date, items in groupby(temp_data, key=itemgetter('date')):
-                                data.append({
-                                    'value': date,
-                                    'items': [item for item in items]
-                                })
+                                l_songs = [item for item in items]
+                                data.append([date, len(l_songs), l_songs])
 
                     self.send_response(200)
                     self.send_header('Content-type', 'application/json')
