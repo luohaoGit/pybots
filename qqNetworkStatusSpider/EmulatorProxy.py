@@ -32,7 +32,7 @@ log_path = './network_status_' + qq + '_' + datetime.fromtimestamp(int(time.time
 pre_status_file = './pre_status_' + qq
 email_subject = 'tencent qq'
 exception_times = 0
-pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='', db='lss', port=3306)
+pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='root', db='lss', port=3306)
 sql = 'INSERT INTO qq_status (id, status, time) VALUES (%s, %s, %s);'
 
 
