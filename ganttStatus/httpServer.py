@@ -11,6 +11,19 @@ import re
 from operator import itemgetter
 from itertools import groupby
 
+'''
+http://kf.qq.com/faq/1701017fYr2q170101AfIr6J.html
+
+QQ在线状态显示规则是什么？
+1、当电脑端QQ、手机QQ、微信、超级QQ都设置为在线状态时，优先显示电脑QQ在线；
+
+2、若电脑端QQ设置为隐身或者离线状态时，会优先显示手机QQ在线；
+
+3、若电脑端QQ和手机QQ都设置退出或者隐身，会优先显示超级QQ在线；
+
+4、若电脑端QQ和手机QQ都退出或隐身，并且超级QQ关闭在线状态，就会显示微信在线。
+'''
+
 host = ('localhost', 8888)
 pool = PooledDB(pymysql, 1, host='127.0.0.1', user='root', passwd='root', db='lss', port=3306)
 source_file_path = os.path.split(os.path.realpath(__file__))[0] + '/'
