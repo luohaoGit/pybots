@@ -60,7 +60,6 @@ def get_song(inc, pre_count, pre_song_list):
 
     up_songs = []
     new_songs = []
-    has_never_heard = pre_count < count
     for s in song_list:
         if s not in pre_song_list:
             new_songs.append(s)
@@ -70,7 +69,7 @@ def get_song(inc, pre_count, pre_song_list):
             if s_index < pre_index:
                 up_songs.append(s)
 
-    if has_never_heard or len(new_songs) > 0 or len(up_songs) > 0:
+    if len(new_songs) > 0 or len(up_songs) > 0:
         dump_file(Dump(now_str, count, song_list), dump_file_name_tpl.format(timestamp=now_str))
         with open(timestamp_file_name, 'w') as file:
             file.write(now_str)
