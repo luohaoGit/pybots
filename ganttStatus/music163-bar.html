@@ -63,7 +63,7 @@ function getData() {
                             text.push('<div class="toolDiv">reset check DB</div>');
                         }else {
                             e.listen_songs.forEach(function (s) {
-                                text.push('<div class="toolDiv">' + e.time + '-' + s.s_name + '-' + s.s_singer + '</div>');
+                                text.push('<div class="toolDiv">' + e.time + '-' + s.s_name + '-' + s.s_singer + '(' + s.s_id + ')' + '</div>');
                             })
                         }
                     });
