@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="https://www.echartsjs.com/examples/vendors/jquery/jquery.js"></script>
+       <script type="text/javascript" src="http://momentjs.com/downloads/moment-with-locales.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+// Generate data
+var category = [];
+var barData = [];
+var restLength = 10;
+
+var m = moment();
+var urlParam = getUrlParam();
+if(urlParam){
+    var month = urlParam.split('=')[1];
+    m = moment(month);
+}
+
+var range = m.format('YYYY-MM');
+var param = 's=' + m.date(1).format('YYYY-MM-DD') + '&e=' + m.add(1, 'months').date(1).format('YYYY-MM-DD');
+
+getData();
+function getData() {
+    myChart.showLoading(
+        {
+            text: 'Loding...',
+            color: '#14c8d4',
+        }
+    );
+    $.get('music163.data?' + param, function (data) {
+        barData = data;
+        data.forEach(function(d){
+           category.push(d[0]);
+        });
+        option = {
+            backgroundColor: '#0f375f',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(data){
+                    var events = data[0].data[2];
+                    var text = [];
+                    events.forEach(function(e){
+                        if(e.listen_songs.length > restLength){
+                            text.push('<div class="toolDiv">reset check DB</div>');
+                        }else {
+                            e.listen_songs.forEach(function (s) {
+                                text.push('<div class="toolDiv">' + e.time + '-' + s.s_name + '-' + s.s_singer + '</div>');
+                            })
+                        }
+                    });
+                    return text.join('');
+                }
+            },
+            xAxis: {
+                data: category,
+                axisLine: {
+                    lineStyle: {
+                        color: '#ccc'
+                    }
+                }
+            },
+            yAxis: {
+                splitLine: {show: false},
+                axisLine: {
+                    lineStyle: {
+                        color: '#ccc'
+                    }
+                }
+            },
+            series: [{
+                name: 'bar',
+                type: 'bar',
+                barWidth: 10,
+                itemStyle: {
+                    normal: {
+                        barBorderRadius: 5,
+                        color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                            [
+                                {offset: 0, color: '#14c8d4'},
+                                {offset: 1, color: '#43eec6'}
+                            ]
+                        )
+                    }
+                },
+                data: barData
+            }]
+        };;
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+
+        myChart.hideLoading();
+    });
+}
+function getUrlParam(){
+    var url = document.location.toString();
+    var arrUrl = url.split("?");
+    return arrUrl[1] === undefined ? '' : arrUrl[1]
+}
+       </script>
+   </body>
+</html>

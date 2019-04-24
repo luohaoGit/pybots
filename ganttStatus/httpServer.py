@@ -92,7 +92,7 @@ class Resquest(BaseHTTPRequestHandler):
                             songs = fetch_all(music163_detail_sql % rid)
                             songs_arr = []
                             listen_songs = []
-                            for _, s_index, s_id, s_name, s_singer, _ in songs:
+                            for _, _, s_index, s_id, s_name, s_singer, _ in songs:
                                 songs_arr.append({
                                     's_index': s_index,
                                     's_id': s_id,
