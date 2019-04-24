@@ -24,7 +24,7 @@ option = null;
 var category = [];
 var barData = [];
 var restLength = 10;
-
+moment.locale('zh-cn');
 var m = moment();
 var urlParam = getUrlParam();
 if(urlParam){
@@ -32,7 +32,7 @@ if(urlParam){
     m = moment(month);
 }
 
-var range = m.format('YYYY-MM');
+var month = m.format('YYYY-MM');
 var param = 's=' + m.date(1).format('YYYY-MM-DD') + '&e=' + m.add(1, 'months').date(1).format('YYYY-MM-DD');
 
 getData();
@@ -58,6 +58,7 @@ function getData() {
                 formatter: function(data){
                     var events = data[0].data[2];
                     var text = [];
+                    text.push('<div class="toolDiv">' + moment(events[0].date).format('ddd') + '</div>');
                     events.forEach(function(e){
                         if(e.listen_songs.length > restLength){
                             text.push('<div class="toolDiv">reset check DB</div>');
