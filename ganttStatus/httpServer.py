@@ -34,6 +34,10 @@ music163_detail_sql = 'select * from music_163_detail where pid=%s order by song
 
 categories = ["手机在线 - WiFi", "手机在线 - 4G", "手机在线 - 3G", "手机在线 - 2G", "在线", "离开", "离线"]
 colors = {
+    "iPhone X在线 - WiFi": "#00CC00",
+    "iPhone X在线 - 4G": "#99FF00",
+    "iPhone X在线 - 3G": "#FFFF00",
+    "iPhone X在线 - 2G": "#FF6600",
     "手机在线 - WiFi": "#42dc4a",
     "手机在线 - 4G": "#d82dd4",
     "手机在线 - 3G": "#6600FF",
