@@ -38,6 +38,7 @@ colors = {
     "iPhone X在线 - 4G": "#99FF00",
     "iPhone X在线 - 3G": "#FFFF00",
     "iPhone X在线 - 2G": "#FF6600",
+    "iPhone X在线": "#0099FF",
     "手机在线 - WiFi": "#42dc4a",
     "手机在线 - 4G": "#d82dd4",
     "手机在线 - 3G": "#6600FF",
