@@ -9,7 +9,7 @@ from datetime import datetime
 
 import pymysql
 
-data_path = 'D:\music163\d3'
+data_path = 'D:\music163\d4'
 conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', password='root', database='lss', charset='utf8')
 main_sql = 'INSERT INTO music_163_total (id, total, time) VALUES (%s, %s, %s);'
 detail_sql = 'INSERT INTO music_163_detail (pid, song_index, song_id, song_name, song_singer, time) VALUES (%s, %s, %s, %s, %s, %s);'
