@@ -17,7 +17,7 @@ qq = sys.argv[1]
 desired_caps = {
     'platformName': 'Android',
     'platformVersion': '5.1.1',
-    'deviceName': '127.0.0.1:5555',
+    'deviceName': 'emulator-5554',
     'appPackage': 'com.tencent.mobileqq',
     'appActivity': 'com.tencent.mobileqq.activity.SplashActivity',
     'unicodeKeyboard': True,
@@ -47,7 +47,7 @@ def parse_network_status(inc, pre_status):
             ns = ns_eles[0].text
         else:
             ns = '离线'
-        driver.find_element_by_id('com.tencent.mobileqq:id/rlCommenTitle').find_elements_by_class_name('android.widget.LinearLayout')[0].click()
+        driver.find_element_by_id('com.tencent.mobileqq:id/rlCommenTitle').find_elements_by_id('com.tencent.mobileqq:id/name')[1].find_elements_by_id('com.tencent.mobileqq:id/name')[0].click()
         now = datetime.fromtimestamp(int(time.time()), tz).strftime('%Y-%m-%d %H:%M:%S')
         content = qq + "\t" + now + "\t" + pre_status + " =======> " + ns
         print(content)
